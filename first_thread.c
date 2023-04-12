@@ -6,7 +6,7 @@
 /*   By: hachi <dev@hachi868.com>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 00:44:38 by hachi             #+#    #+#             */
-/*   Updated: 2023/04/13 02:16:34 by hachi            ###   ########.fr       */
+/*   Updated: 2023/04/13 03:09:26 by hachi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,18 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+
+//pthread_exitテスト。
+void	another_func(int n, const char *func_name)
+{
+	if (strcmp(func_name, "thread_func") == 0 && n == 2)
+	{
+		printf("exit. オワ\n");
+		pthread_exit(NULL);
+		//exit(0);
+	}
+}
 
 void	repeat_print(int n, const char *func_name)
 {
@@ -23,6 +35,7 @@ void	repeat_print(int n, const char *func_name)
 	while (i < n)
 	{
 		printf("Fire %s: %d\n", func_name, i);
+		another_func(i, func_name);
 		sleep(1);
 		i++;
 	}
