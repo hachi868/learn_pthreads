@@ -6,7 +6,7 @@
 /*   By: hachi <dev@hachi868.com>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 00:44:38 by hachi             #+#    #+#             */
-/*   Updated: 2023/04/13 01:34:58 by hachi            ###   ########.fr       */
+/*   Updated: 2023/04/13 02:16:34 by hachi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,9 @@ void	repeat_print(int n, const char *func_name)
 	}
 }
 
+// pthread_createの第3引数として渡す。
+// voidポインタをreturnし、voidポインタの引数を1つ取る関数でないといけない。
+// 引数はpthread_create第4引数から受け取れるが、今回は使わないのでNULLとなっている
 void	*thread_func(void *arg)
 {
 	const char	*func_name;
@@ -38,6 +41,7 @@ void	*thread_func(void *arg)
 	return (NULL);
 }
 
+//thread => pthread_createの第1引数として渡す
 int	main(void)
 {
 	const char	*func_name;
