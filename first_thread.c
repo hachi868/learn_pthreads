@@ -6,7 +6,7 @@
 /*   By: hachi <dev@hachi868.com>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 00:44:38 by hachi             #+#    #+#             */
-/*   Updated: 2023/04/14 01:20:26 by hachi            ###   ########.fr       */
+/*   Updated: 2023/04/14 02:35:14 by hachi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,10 +74,14 @@ int	main(int argc, char **argv)
 		exit(1);
 	}
 	repeat_print(5, func_name);
-	if (pthread_join(thread, NULL) != 0)
+	if (thread != NULL)
 	{
-		printf("Error!スレッド終了待ちに失敗した");
-		exit(1);
+		if (pthread_join(thread, NULL) != 0)
+		{
+			printf("Error!スレッド終了待ちに失敗した");
+			exit(1);
+		}
+		thread = NULL;
 	}
 	//pthread_join終わり(すなわちpthread_createで呼び出した処理が終了したら)でここに。
 	printf("bye.\n");
