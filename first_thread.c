@@ -6,7 +6,7 @@
 /*   By: hachi <dev@hachi868.com>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 00:44:38 by hachi             #+#    #+#             */
-/*   Updated: 2023/04/13 03:09:26 by hachi            ###   ########.fr       */
+/*   Updated: 2023/04/14 01:20:26 by hachi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,26 +46,40 @@ void	repeat_print(int n, const char *func_name)
 // 引数はpthread_create第4引数から受け取れるが、今回は使わないのでNULLとなっている
 void	*thread_func(void *arg)
 {
+	int			n;
 	const char	*func_name;
 
-	(void)arg;
+	n = (intptr_t)arg;
 	func_name = __func__;
-	repeat_print(3, func_name);
+	repeat_print(n, func_name);
 	return (NULL);
 }
 
 //thread => pthread_createの第1引数として渡す
-int	main(void)
+//pthread_join 指定したスレッドが終了するまで戻ってこない
+int	main(int argc, char **argv)
 {
 	const char	*func_name;
 	pthread_t	thread;
+	intptr_t	n;
 
+	if (argc > 1)
+		n = atoi(argv[1]);
+	else
+		n = 1;
 	func_name = __func__;
-	if (pthread_create(&thread, NULL, thread_func, NULL) != 0)
+	if (pthread_create(&thread, NULL, thread_func, (void *)n) != 0)
 	{
 		printf("Error!スレッド作れなかった");
 		exit(1);
 	}
 	repeat_print(5, func_name);
+	if (pthread_join(thread, NULL) != 0)
+	{
+		printf("Error!スレッド終了待ちに失敗した");
+		exit(1);
+	}
+	//pthread_join終わり(すなわちpthread_createで呼び出した処理が終了したら)でここに。
+	printf("bye.\n");
 	return (0);
 }
