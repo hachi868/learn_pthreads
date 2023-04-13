@@ -6,7 +6,7 @@
 /*   By: hachi <dev@hachi868.com>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 00:44:38 by hachi             #+#    #+#             */
-/*   Updated: 2023/04/14 02:35:14 by hachi            ###   ########.fr       */
+/*   Updated: 2023/04/14 03:28:57 by hachi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,27 +46,30 @@ void	repeat_print(int n, const char *func_name)
 // 引数はpthread_create第4引数から受け取れるが、今回は使わないのでNULLとなっている
 void	*thread_func(void *arg)
 {
-	int			n;
+	intptr_t	n;
 	const char	*func_name;
 
 	n = (intptr_t)arg;
 	func_name = __func__;
 	repeat_print(n, func_name);
-	return (NULL);
+	//printf("thread_func:n: %ld\n", n);
+	return ((void *)n);
 }
 
 //thread => pthread_createの第1引数として渡す
-//pthread_join 指定したスレッドが終了するまで戻ってこない
+//pthread_join 指定したスレッドが終了するまで戻ってこない。第2引数はスレッドの戻り値の格納先になる。
 int	main(int argc, char **argv)
 {
 	const char	*func_name;
 	pthread_t	thread;
 	intptr_t	n;
+	intptr_t	rtn;
 
 	if (argc > 1)
 		n = atoi(argv[1]);
 	else
 		n = 1;
+	rtn = 0;
 	func_name = __func__;
 	if (pthread_create(&thread, NULL, thread_func, (void *)n) != 0)
 	{
@@ -76,7 +79,7 @@ int	main(int argc, char **argv)
 	repeat_print(5, func_name);
 	if (thread != NULL)
 	{
-		if (pthread_join(thread, NULL) != 0)
+		if (pthread_join(thread, (void **)&rtn) != 0)
 		{
 			printf("Error!スレッド終了待ちに失敗した");
 			exit(1);
@@ -84,6 +87,7 @@ int	main(int argc, char **argv)
 		thread = NULL;
 	}
 	//pthread_join終わり(すなわちpthread_createで呼び出した処理が終了したら)でここに。
+	printf("thread_funcがreturnしてpthread_joinの第2引数に格納されたやつ: %ld\n", rtn);
 	printf("bye.\n");
 	return (0);
 }
