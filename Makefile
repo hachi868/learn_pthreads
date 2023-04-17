@@ -1,9 +1,9 @@
-PROG := first_thread
+PROG := prime_number
 
 CC := cc
 CFLAGS := -Wall -Wextra -Werror -pthread
 
-SRCS =	first_thread.c
+SRCS =	prime_number.c
 
 OBJS := $(SRCS:.c=.o)
 
