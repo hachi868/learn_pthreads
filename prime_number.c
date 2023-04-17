@@ -6,10 +6,11 @@
 /*   By: hachi-gbg <dev@hachi868.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/18 02:29:41 by hachi-gbg         #+#    #+#             */
-/*   Updated: 2023/04/18 02:59:59 by hachi-gbg        ###   ########.fr       */
+/*   Updated: 2023/04/18 03:08:39 by hachi-gbg        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -57,17 +58,26 @@ int	count_prime_numbers(int n)
 	return (g_num);
 }
 
-int	main(void)
+void	*thread_func(void *arg)
 {
 	int	n;
 	int	x;
 
-	n = 100000;
+	n = (intptr_t)arg;
 	x = count_prime_numbers(n);
 	printf("Number of prime numbers under %d is %d\n", n, x);
+	return (NULL);
+}
 
-	n = 200000;
-	x = count_prime_numbers(n);
-	printf("Number of prime numbers under %d is %d\n", n, x);
+int	main(void)
+{
+	pthread_t	thread1;
+	pthread_t	thread2;
+
+	pthread_create(&thread1, NULL, thread_func, (void *)100000);
+	pthread_create(&thread2, NULL, thread_func, (void *)200000);
+
+	pthread_join(thread1, NULL);
+	pthread_join(thread2, NULL);
 	return (0);
 }
