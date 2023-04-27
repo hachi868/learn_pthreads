@@ -6,7 +6,7 @@
 /*   By: hachi-gbg <dev@hachi868.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/18 02:29:41 by hachi-gbg         #+#    #+#             */
-/*   Updated: 2023/04/27 23:35:58 by hachi-gbg        ###   ########.fr       */
+/*   Updated: 2023/04/28 03:13:32 by hachi-gbg        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,6 @@ int	main(void)
 
 	pthread_join(thread1, NULL);
 	pthread_join(thread2, NULL);
-	pthread_mutex_destroy(&g_using_prime_number, NULL);
+	pthread_mutex_destroy(&g_using_prime_number);
 	return (0);
 }
