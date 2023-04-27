@@ -6,7 +6,7 @@
 /*   By: hachi-gbg <dev@hachi868.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/18 02:29:41 by hachi-gbg         #+#    #+#             */
-/*   Updated: 2023/04/18 03:08:39 by hachi-gbg        ###   ########.fr       */
+/*   Updated: 2023/04/27 23:35:58 by hachi-gbg        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,9 @@
 
 #define MAX_PRIME_NUMBERS 100000
 
-int	g_prime_number[MAX_PRIME_NUMBERS];
-int	g_num;
+int				g_prime_number[MAX_PRIME_NUMBERS];
+int				g_num;
+pthread_mutex_t	g_using_prime_number;
 
 int	is_prime(int m)
 {
@@ -39,6 +40,7 @@ int	count_prime_numbers(int n)
 {
 	int	i;
 
+	pthread_mutex_lock(&g_using_prime_number);//OFFになるのをまつ。
 	g_num = 0;
 	i = 2;
 	while (i < n)
@@ -55,6 +57,7 @@ int	count_prime_numbers(int n)
 		}
 		i++;
 	}
+	pthread_mutex_unlock(&g_using_prime_number);
 	return (g_num);
 }
 
@@ -74,10 +77,13 @@ int	main(void)
 	pthread_t	thread1;
 	pthread_t	thread2;
 
+	if (pthread_mutex_init(&g_using_prime_number, NULL) != 0)
+		exit(1);
 	pthread_create(&thread1, NULL, thread_func, (void *)100000);
 	pthread_create(&thread2, NULL, thread_func, (void *)200000);
 
 	pthread_join(thread1, NULL);
 	pthread_join(thread2, NULL);
+	pthread_mutex_destroy(&g_using_prime_number, NULL);
 	return (0);
 }
