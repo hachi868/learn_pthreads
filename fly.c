@@ -6,7 +6,7 @@
 /*   By: hachi-gbg <dev@hachi868.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 03:14:37 by hachi-gbg         #+#    #+#             */
-/*   Updated: 2023/04/28 03:37:51 by hachi-gbg        ###   ########.fr       */
+/*   Updated: 2023/04/29 21:14:58 by hachi-gbg        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,61 @@ void	init_fly(t_fly *fly, char mark_fly)
 	pthread_mutex_init(&fly->mutex, NULL);//直に構造体の中身にinit
 }
 
+//fly destroy
 void	destroy_fly(t_fly *fly)
 {
 	pthread_mutex_destroy(&fly->mutex);
 }
 
+//fly move
+void	move_fly(t_fly *fly)
+{
+	pthread_mutex_lock(&fly->mutex);
 
+	pthread_mutex_unlock(&fly->mutex);
+}
+
+//fly 座標確認
+bool	check_pos_fly(t_fly *fly, int x, int y)
+{
+	bool	is_pos;
+
+	pthread_mutex_lock(&fly->mutex);
+	is_pos = ((double)x == fly->x && (double)y == fly->y);
+	pthread_mutex_unlock(&fly->mutex);
+	return (is_pos);
+}
+
+//fly 動かす
+void	*do_move(void *arg)
+{
+	t_fly	*fly;
+
+	fly = (t_fly)arg;
+	while (!g_flag_stop_request)
+	{
+		move_fly(fly);
+		m_sleep((int)(1000.0 / fly->speed));
+	}
+}
+
+//screen 描画
+void	draw_screen(void)
+{
+
+}
+
+//while screen 描画
+void	*repeat_draw_screen(void *arg)
+{
+	while (!g_flag_stop_request)
+	{
+		draw_screen();
+		m_sleep(DRAW_CYCLE);
+	}
+}
+
+int	main(void)
+{
+
+}
