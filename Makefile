@@ -1,14 +1,14 @@
-PROG := prime_number
+PROG := fly
 
 CC := cc
 CFLAGS := -Wall -Wextra -Werror -pthread
 
-SRCS =	prime_number.c
+SRCS =	fly.c
 
 OBJS := $(SRCS:.c=.o)
 
 $(PROG): $(OBJS)
-	$(CC) $(CFLAGS) -o $@ $(OBJS)
+	$(CC) $(CFLAGS) -lm -o $@ $(OBJS)
 
 all: $(PROG)
 
