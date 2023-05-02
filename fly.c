@@ -6,7 +6,7 @@
 /*   By: hachi-gbg <dev@hachi868.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 03:14:37 by hachi-gbg         #+#    #+#             */
-/*   Updated: 2023/05/02 20:48:17 by hachi-gbg        ###   ########.fr       */
+/*   Updated: 2023/05/02 21:03:29 by hachi-gbg        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,15 +105,15 @@ void	move_fly(t_fly *fly)
 		fly->y = HEIGHT - 1;
 		fly->angle *= -1;
 	}
+	pthread_mutex_unlock(&fly->mutex);
 	//他のハエとぶつかりそうになったら方向を変える
 	while (i < NUM_FLY)
 	{
 		if ((g_list_fly[i].mark != fly->mark) && \
-			(distance_fly(&g_list_fly[i], fly->x, fly->y)))//引数として比較対象のt_fly,自分のx,yが渡る
+			(distance_fly(&g_list_fly[i], fly->x, fly->y) < 2.0))//引数として比較対象のt_fly,自分のx,yが渡る
 			fly->angle += M_PI;
 		i++;
 	}
-	pthread_mutex_unlock(&fly->mutex);
 }
 
 //fly 座標確認
