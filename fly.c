@@ -6,7 +6,7 @@
 /*   By: hachi-gbg <dev@hachi868.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 03:14:37 by hachi-gbg         #+#    #+#             */
-/*   Updated: 2023/04/30 03:18:24 by hachi-gbg        ###   ########.fr       */
+/*   Updated: 2023/05/02 20:48:17 by hachi-gbg        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,27 @@ void	destroy_fly(t_fly *fly)
 	pthread_mutex_destroy(&fly->mutex);
 }
 
+//distance
+double	distance_fly(t_fly *fly, double x, double y)
+{
+	double	dx;
+	double	dy;
+	double	d;
+
+	pthread_mutex_lock(&fly->mutex);
+	dx = x - fly->x;
+	dy = y - fly->y;
+	d = sqrt(pow(dx, 2) + pow(dy, 2));
+	pthread_mutex_unlock(&fly->mutex);
+	return (d);
+}
+
 //fly move
 void	move_fly(t_fly *fly)
 {
+	size_t	i;
+
+	i = 0;
 	pthread_mutex_lock(&fly->mutex);
 	fly->x += cos(fly->angle);
 	fly->y += sin(fly->angle);
@@ -86,6 +104,14 @@ void	move_fly(t_fly *fly)
 	{
 		fly->y = HEIGHT - 1;
 		fly->angle *= -1;
+	}
+	//他のハエとぶつかりそうになったら方向を変える
+	while (i < NUM_FLY)
+	{
+		if ((g_list_fly[i].mark != fly->mark) && \
+			(distance_fly(&g_list_fly[i], fly->x, fly->y)))//引数として比較対象のt_fly,自分のx,yが渡る
+			fly->angle += M_PI;
+		i++;
 	}
 	pthread_mutex_unlock(&fly->mutex);
 }
